@@ -1,0 +1,138 @@
+.clearfix{ zoom: 1}
+.clearfix:after{
+    content:".";
+    clear:both;
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+/* ---------------------- Reusable Components ---------------------- */
+
+.row{
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+/* ---------------------- Search  ---------------------- */
+body {
+  margin-top: 0;
+  font-family: Arial;
+  background-color: #c4bfbf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.s input[type=text] {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+.s button {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: #555151;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+.s button:hover {
+  background: #afa7a7;
+}
+
+.s::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* ---------------------- Price  ---------------------- */
+
+.companyname{
+  margin-top: 0;
+}
+
+.currentprice {
+    margin-top: 60px;
+    font-size: 150%; 
+    margin-left: 25%;
+    } 
+
+.price-trend {
+    margin-top: 40px;
+     
+    
+} 
+
+/* ---------------------- Results1  ---------------------- */
+
+.plan-box {
+    background-color: #e4e4e4;
+    border-radius: 5px;
+    width: 90%;
+    margin-left: 5%;
+    box-shadow: 0 2px 2px #efefef;
+}
+
+.news-box {
+    background-color: #e4e4e4;
+    border-radius: 5px;
+    width: 60%;
+    margin-left: 20%;
+    box-shadow: 0 2px 2px #efefef;
+}
+.speakers-box {
+    background-color: #e4e4e4;
+    border-radius: 5px;
+    width: 60%;
+    margin-left: 20%;
+    box-shadow: 0 2px 2px #efefef;
+}
+
+.speakers-left{
+  float: left;
+  width:30%;
+}
+
+
+.price-stats {
+    font-size: 140%;
+}
+
+.plan-box ul {
+    list-style: none;
+}
+
+.plan-box ul li {
+    padding: 5px 0;
+}
+
+.plan-box h2{
+    text-align: center;
+}
+
+
+
+a:link,
+a:visited{
+  color: #000;
+
+
+}
+a:active,
+a:hover{
+  color: #afa7a7;
+
+}
+
+
+

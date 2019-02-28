@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="resources/normalize.css">
+    <link rel="stylesheet" type="text/css" href="resources/grid.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("button").click(function(event){
+                event.preventDefault();
+                $("p").empty();
+
+                var sym = $("#search").val().toUpperCase();
+                var request = new XMLHttpRequest();
+            request.open('GET', 'http://localhost:9200/nesh/data/20190227'+sym, true);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.onload = function () {
+
+              var data = JSON.parse(this.response);
+              if (request.status >= 200 && request.status < 400) {
+                  var currentprice = data._source.findata.dataDict['Current Price'];
+                  var newsarticles = data._source.news.newsArticles;
+                  var companyname = data._source.companyName
+                  var partlist = data._source.earningcall.participantsDetail;
+                  var maxperson = data._source.earningcall.participantMaxCount;
+                  var calldate = data._source.earningcall.callDate;
+                  var prevclose = data._source.findata.dataDict['Prev Close'];
+                  var open = data._source.findata.dataDict['Open'];
+                  var bid = data._source.findata.dataDict['Bid'];
+                  var ask = data._source.findata.dataDict['Ask'];
+                  var dayrange = data._source.findata.dataDict['Day\'s Range'];
+                  var yearrange = data._source.findata.dataDict['52wk Range'];
+                  var volume = data._source.findata.dataDict['Volume'];
+                  var avgvol = data._source.findata.dataDict['Avg Vol'];
+                  var marketcap = data._source.findata.dataDict['Market Cap'];
+                  var pettm = data._source.findata.dataDict['P/E (ttm)'];
+                  var epsttm = data._source.findata.dataDict['EPS (ttm)'];
+                  var divyield = data._source.findata.dataDict['Div & Yield'];
+                  var trend = data._source.findata.dataDict['Current Trend']; 
+                  var sentiment = data._source.findata.dataDict['sentiment'];
+                  var trensym = "&#x25B2;"
+
+                  if(parseFloat(trend) < 0)
+                  {
+                      trensym = "&#x25BC;"
+                  }
+
+                  var partstr="";
+                  for (var i = 0; i < partlist.length; i++)
+                  {
+                      partstr+=partlist[i]+'<br>';
+                  };
+
+                  partstr+='<br>'
+                  var newsart="";
+                  var newskeys = Object.keys(newsarticles)
+                  for (var i = 0; i < newskeys.length; i++) {
+                    var artlink = newsarticles[newskeys[i]]
+                    var artname = newskeys[i]
+
+                      newsart+= '<a href=\''+artlink+'\' target=\'_blank\'>'+artname+'</a><br>';
+                  };
+                  newsart+='<br>'
+
+                  var tmp = JSON.stringify(partlist)
+                  var tmp1 = tmp.replace('\",\"','\n').replace('[','').replace(']','')
+                  var senti = parseFloat(sentiment);
+
+                  var sentstr = "Postive"
+                  if(senti < 0)
+                  {
+                      sentstr = "Negative"
+                  }
+
+                  var partdetail = "<br><h3>Earnings Call Details</h3>"+ calldate+'<br>' + "Person who spoke the most:\xa0" + maxperson + '<br>'
+                  var newsdetail = "<br><h3>Related News Articles</h3>" + "Overall sentiment:\xa0 " + sentstr 
+
+                  var pricedetail = sym+' '+currentprice+' '+ trensym+' '+trend+'%'
+                    $(".sentiment").text(sentiment);
+                    $(".newsarticles").text(newsarticles);
+                    $(".partlist").text(partlist);
+                    $(".maxperson").text(maxperson);
+                    $(".calldate").text(calldate);
+                    $(".prevclose").text("Prev Close:"+"\xa0\xa0\xa0\xa0\xa0"+prevclose);
+                    $(".open").text("Open:"+"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+open);
+                    $(".bid").text("Bid:"+"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+bid);
+                    $(".ask").text("Ask:"+"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+ask);
+                    $(".dayrange").text("Day Range:"+"\xa0\xa0\xa0\xa0"+dayrange);
+                    $(".yearrange").text("Year Range:"+"\xa0\xa0\xa0"+yearrange);
+                    $(".volume").text("Volume:"+"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+volume);
+                    $(".avgvol").text("Avg Volume:"+"\xa0\xa0\xa0\xa0"+avgvol);
+                    $(".marketcap").text("Market Cap:"+"\xa0\xa0\xa0\xa0"+marketcap);
+                    $(".pettm").text("P/E (ttm):"+"\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+pettm);
+                    $(".epsttm").text("EPS (ttm):"+"\xa0\xa0\xa0\xa0\xa0\xa0\xa0"+epsttm);
+                    $(".divyield").text("Div & Yield:"+"\xa0\xa0\xa0\xa0\xa0"+divyield);
+                    $(".companyname").text(companyname);
+
+                    document.getElementById("partstr").innerHTML = partstr;
+                    document.getElementById("partdetail").innerHTML = partdetail;
+                    document.getElementById("newsart").innerHTML = newsart;
+                    document.getElementById("newsdetail").innerHTML = newsdetail;
+                    document.getElementById("pricedetail").innerHTML = pricedetail;
+              }
+            }
+            request.send();
+          })
+    });
+    </script>
+</head>
+<body>
+    <section class="s" style="margin:5% 0 0 35%;max-width:30%">
+    <h1 align="center">NESH</h1>
+        <label for="search_box"></label>
+        <input type="text" placeholder="Company symbol.... Ex:OXY" id="search" class="search">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </section>
+    <section class="Message" id="Message">
+     
+        <div class="row">
+            <div class="col span-1-of-3">
+                <div class="plan-box">
+                    <ul>
+                        <li><i class="prevclose"></i></li>
+                        <li><i class="open"></i></li>
+                        <li><i class="bid"></i></li>
+                        <li><i class="ask"></i></li>
+                        <li><i class="dayrange"></i></li>
+                        <li><i class="yearrange"></i></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col span-1-of-3">                
+                <div class="price-trend">
+                    <h3 id="pricedetail" align="center"></h3>
+                    <p class = 'companyname' align="center"></p>
+                </div>
+            </div>
+            
+            <div class="col span-1-of-3">
+                <div class="plan-box">
+                    <ul>
+                        <li><i class="volume"></i></li>
+                        <li><i class="avgvol"></i></li>
+                        <li><i class="marketcap"></i></li>
+                        <li><i class="pettm"></i></li>
+                        <li><i class="epsttm"></i></li>
+                        <li><i class="divyield"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="speakers" id = "speakers">
+        <div class="row">
+            <div class="col span-3-of-3">
+                <div class = "speakers-box">
+                    <p id="partdetail" align="center"></p>
+                    <p id="partstr" align="left" style="margin:5% 5%"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section classs = "articles" id = "articles">
+        <div class="row">
+            <div class="col span-3-of-3">
+                <div class="news-box">
+                        <p id="newsdetail" align="center"></p>
+                        <p id="newsart" align="left" style="margin:5% 5%"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
